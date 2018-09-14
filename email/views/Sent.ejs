@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Inbox</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -22,18 +22,86 @@
         </form>
     </div>
 </nav>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/inbox/send" method="post">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">To:</label>
+                        <input type="text" class="form-control" name="recipient">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-text" class="col-form-label">Subject:</label>
+                        <input type="text" class="form-control" name="subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" name="content"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="sender-name" class="col-form-label">From:</label>
+                    <input type="text" class="form-control" name="sender" id="sender" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">To:</label>
+                    <input type="text" class="form-control" name="recipient" id="recipient" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="subject-text" class="col-form-label">Subject:</label>
+                    <input type="text" class="form-control" name="subject" id="subject" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="date-text" class="col-form-label">Date:</label>
+                    <input type="text" class="form-control" name="date" id="date" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Content:</label>
+                    <textarea class="form-control" name="content" id="content" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col-sm-2 content">
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Compose</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Compose</button>
         </li>
     </ul>
 </div>
 <div class="col-sm-10 content">
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
-            <th>From</th>
             <th>To</th>
             <th>Subject</th>
             <th>Date</th>
@@ -41,8 +109,7 @@
         </thead>
         <tbody>
         <% for (var i = 0; i< result.length; i++){%>
-            <tr>
-                <td><%= result[i].Sender %></td>
+            <tr data-toggle="modal" data-target="#exampleModal2" data-sender=<%= result[i].Sender %> data-recipient=<%= result[i].Recipient %> data-subject=<%= result[i].Subject %> data-content=<%= result[i].Content %> data-date=<%= result[i].Date %> >
                 <td><%= result[i].Recipient %></td>
                 <td><%= result[i].Subject %></td>
                 <td><%= result[i].Date %></td>
@@ -53,4 +120,22 @@
 </div>
 
 </body>
+<script>
+    $('#exampleModal2').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var sender = button.data('sender')
+        var date = button.data('date')
+        var content = button.data('content')
+        var subject = button.data('subject')
+        var recipient = button.data('recipient') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('#recipient').val(recipient)
+        modal.find('#sender').val(sender)
+        modal.find('#content').val(content)
+        modal.find('#date').val(date)
+        modal.find('#subject').val(subject)
+    })
+</script>
 </html>

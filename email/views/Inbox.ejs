@@ -1,11 +1,12 @@
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Inbox</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/contact_modal.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -25,16 +26,104 @@
 <div class="col-sm-2 content">
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Compose</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Compose</button>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Delete</a>
+            <button type="button" class="btn btn-danger btn-ok" data-toggle="modal" data-target="#confirm-delete" >Delete</button>
         </li>
     </ul>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/inbox/send" method="post">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">To:</label>
+                        <input type="text" class="form-control" name="recipient">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-text" class="col-form-label">Subject:</label>
+                        <input type="text" class="form-control" name="subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" name="content"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sender-name" class="col-form-label">From:</label>
+                        <input type="text" class="form-control" name="sender" id="sender" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">To:</label>
+                        <input type="text" class="form-control" name="recipient" id="recipient" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-text" class="col-form-label">Subject:</label>
+                        <input type="text" class="form-control" name="subject" id="subject" readonly>
+                    </div>
+                <div class="form-group">
+                    <label for="date-text" class="col-form-label">Date:</label>
+                    <input type="text" class="form-control" name="date" id="date" readonly>
+                </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Content:</label>
+                        <textarea class="form-control" name="content" id="content" readonly></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>You are about to delete one track, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="deleteBtn" name="deleteBtn" class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
     <div class="col-sm-10 content">
-    <table class="table table-hover" data-link="row">
+    <table class="table table-hover" data-link="row" id="tableID">
         <thead>
         <tr>
             <th><input type="checkbox" name="sample" class="selectall"></th>
@@ -47,11 +136,11 @@
         <tbody>
         <% for (var i = 0; i< result.length; i++){%>
         <tr>
-            <td><input type="checkbox" name="sample[]"></td>
-            <td><%= result[i].Sender %></td>
-            <td><%= result[i].Recipient %></td>
-            <td><%= result[i].Subject %></td>
-            <td><%= result[i].Date %></td>
+            <td ><input type="checkbox" name="box"></td>
+            <td data-toggle="modal" data-target="#exampleModal2" data-sender=<%= result[i].Sender %> data-recipient=<%= result[i].Recipient %> data-subject=<%= result[i].Subject %> data-content=<%= result[i].Content %> data-date=<%= result[i].Date %>><%= result[i].Sender %></td>
+            <td data-toggle="modal" data-target="#exampleModal2" data-sender=<%= result[i].Sender %> data-recipient=<%= result[i].Recipient %> data-subject=<%= result[i].Subject %> data-content=<%= result[i].Content %> data-date=<%= result[i].Date %>><%= result[i].Recipient %></td>
+            <td data-toggle="modal" data-target="#exampleModal2" data-sender=<%= result[i].Sender %> data-recipient=<%= result[i].Recipient %> data-subject=<%= result[i].Subject %> data-content=<%= result[i].Content %> data-date=<%= result[i].Date %>><%= result[i].Subject %></td>
+            <td data-toggle="modal" data-target="#exampleModal2" data-sender=<%= result[i].Sender %> data-recipient=<%= result[i].Recipient %> data-subject=<%= result[i].Subject %> data-content=<%= result[i].Content %> data-date=<%= result[i].Date %>><%= result[i].Date %></td>
         </tr>
         <%}%>
         </tbody>
@@ -60,6 +149,20 @@
 
 </body>
 <script>
+    $('#deleteBtn').click(function() {
+        let table = document.getElementById('tableID');
+        let rowCount = table.rows.length;
+        console.log(rowCount)
+        for(let i=(rowCount-1); i>=(1); i--) {
+            console.log(i)
+            let row = table.rows[i];
+            let chkbox = row.cells[0].getElementsByTagName('input')[0];
+            if('checkbox' == chkbox.type && true == chkbox.checked) {
+                table.deleteRow(i);
+            }
+        }
+    })
+
     $('.selectall').click(function() {
         if ($(this).is(':checked')) {
             $('div input').attr('checked', true);
@@ -67,5 +170,20 @@
             $('div input').attr('checked', false);
         }
     });
+
+    $('#exampleModal2').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var sender = button.data('sender')
+        var date = button.data('date')
+        var content = button.data('content')
+        var subject = button.data('subject')
+        var recipient = button.data('recipient')
+        var modal = $(this)
+        modal.find('#recipient').val(recipient)
+        modal.find('#sender').val(sender)
+        modal.find('#content').val(content)
+        modal.find('#date').val(date)
+        modal.find('#subject').val(subject)
+    })
 </script>
 </html>

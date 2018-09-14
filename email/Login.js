@@ -14,6 +14,16 @@ let connection = mysql.createConnection({
 router.get('/', function(req, res) {
     res.render('Login',{message:""});
 });
+router.post('/reg', (req, res) => {
+    console.log("here");
+    let email = req.body.email;
+    let password = req.body.password;
+    let insertQuery=`INSERT into login values("${email}","${password}")`
+    connection.query(insertQuery, (err) =>{
+        if(err) throw err;
+        res.redirect("/")
+    })
+    });
 
 router.post("/login", (req,res)=>{
     let email = req.body.email;

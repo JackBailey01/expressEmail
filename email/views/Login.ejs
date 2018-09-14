@@ -27,11 +27,37 @@
 
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3" >Register</button>
 
             </form>
             <%= message%>
         </div>
     </div></div></div>
-
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Email Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/reg" method="post">
+                <div class="form-group">
+                    <label for="email" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-form-label">Password:</label>
+                    <input type="text" class="form-control" name="password" id="password" required>
+                </div>
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+            </div>a
+        </div>
+    </div>
+</div>
 </body>
 </html>

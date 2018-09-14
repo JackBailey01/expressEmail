@@ -38,6 +38,22 @@ router.get("/sent",function(req,res){
         res.redirect("/");
     }
 })
+router.post("/send",function(req,res){
+    if(req.session.email){
+        let sender = req.session.email;
+        let recipient = req.body.recipient;
+        let subject = req.body.subject;
+        let content = req.body.content;
+        let insertQuery=`INSERT into emailtable values("${sender}","${recipient}","${subject}","${content}",SYSDATE())`
+        connection.query(insertQuery, (err) =>{
+            if(err) throw err;
+            res.redirect(`/inbox`);
+        })
+    }
+    else{
+        res.redirect("/");
+    }
+})
 
 router.get("/logout",function(req,res){
     req.session.destroy();
